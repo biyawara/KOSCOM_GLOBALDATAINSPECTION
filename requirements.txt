@@ -1,0 +1,15 @@
+click
+sqlalchemy
+logparser
+scrapyd
+scrapyd-client
+psycopg2-binary
+pyyaml
+pandas
+requests
+luigi
+pyarrow
+boto3
+xlrd
+js2py
+s3fs
