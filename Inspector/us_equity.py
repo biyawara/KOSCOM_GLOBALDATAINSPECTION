@@ -42,7 +42,6 @@ class equity_hist():
         for i, row in df.iterrows():
             record = row.tolist()
             records.append(record)
-
     
         cursor.executemany(sql, records)
         sess.commit()

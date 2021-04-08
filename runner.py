@@ -1,9 +1,8 @@
-from database import manager
-from crawler.spiders.us_equity import EikonUsEqityHist
+from  Inspector.us_equity import equity_hist
 
-
-manager.init_db()
-
+task = equity_hist()
+task.LoadM194HBASED()
+ 
 
 '''
 eikon_us_equity_hist = EikonUsEqityHist()
