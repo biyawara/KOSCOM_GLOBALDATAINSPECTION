@@ -22,6 +22,7 @@ class equity_hist():
   
     def __init__(self, *args, **kwargs):
         print("start process")
+        ek.set_app_key(_API_KEY)
 
     def LoadM194HREFE(self):
         
@@ -87,6 +88,7 @@ class equity_hist():
         sess.commit()
 
 
+
 #        load_sql = "LOAD DATA LOCAL INFILE" + "'" + file + "'"  + "INTO TABLE usermanaged.city" + "FIELDS TERMINATED BY ',' ;"
 #        cursor.execute(load_sql)
         
@@ -95,12 +97,34 @@ class equity_hist():
         print(slog)        
 
 
-    def Run(self):
-        self.DropTables()
+    def LoadEikonHist(self):
 
-    def Request(self):
-        ek.set_app_key(_API_KEY)
-        df = ek.get_timeseries(["MSFT.O"],['TIMESTAMP','OPEN','HIGH','LOW','CLOSE','VOLUME'], start_date='2000-01-01',end_date='2021-03-30', interval="daily")        
+        cursor = sess.cursor()
+ 
+        sql = "select * from m194hrefe"
+        cursor.execute(sql)
+ 
+        rows = cursor.fetchall()
+
+        for row in rows:
+            f16013 = row[0]
+            f16012 = row[1]
+            f16288 = row[2]
+            f16288 = row[3]
+            f16002 = row[4]
+
+            f16013 = f16013.strip()
+            
+
+    def Request(self,code):
+        df_unadj = ek.get_timeseries([code],['TIMESTAMP','OPEN','HIGH','LOW','CLOSE','VOLUME'], start_date='2000-01-01',end_date='2021-03-30', interval="daily", corax="unadjusted")        
+        df.rename(columns = {'':'', '':''})
+
+        df_adj = ek.get_timeseries([code],['TIMESTAMP','OPEN','HIGH','LOW','CLOSE','VOLUME'], start_date='2000-01-01',end_date='2021-03-30', interval="daily", corax="adjusted")        
+
+        df = pd.concat([df_unadj, df_adj], axis = 1)
+        df = pd.merge(df_unadj, df_adj, how='outer', on='TIMESTAMP')
+        df['f16013'] = code
 
         hists = []
 
